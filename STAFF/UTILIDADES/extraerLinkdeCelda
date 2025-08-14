@@ -1,0 +1,29 @@
+/**
+ * @description: Extrae un enlace de una celda, ya sea que esté
+ * como texto directo o dentro de una fórmula HYPERLINK.
+ * @param {GoogleAppsScript.Spreadsheet.Range} rangoCelda El rango de la celda que contiene el enlace.
+ * @returns {string} El enlace extraído como una cadena de texto, o una cadena vacía si no se encuentra.
+ */
+function STAFF_utilidades_extraerLinkDeCelda(rangoCelda) {
+  if (!rangoCelda) return "";
+
+  try {
+    const formula = rangoCelda.getFormula();
+    let link = "";
+
+    if (formula) {
+      // Si tiene fórmula tipo HYPERLINK, extraer la URL entre comillas
+      link = formula.match(/"(https:\/\/[^"]+)"/)?.[1] || "";
+      Logger.log("🔍 Link extraído desde fórmula HYPERLINK: " + link);
+    } else {
+      // Si no hay fórmula, tomar el contenido directamente
+      link = rangoCelda.getValue().toString().trim();
+      Logger.log("🔍 Link extraído como texto directo: " + link);
+    }
+
+    return link;
+  } catch (error) {
+    Logger.log("❌ Error al extraer link: " + error.message);
+    return "";
+  }
+}
