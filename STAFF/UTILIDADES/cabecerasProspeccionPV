@@ -1,0 +1,50 @@
+/**
+ * @description: Devuelve un objeto con las cabeceras de las columnas
+ * de la hoja "Concentrado de oportunidades" y sus respectivos índices y letras.
+ */
+function STAFF_utilidades_cabecerasProspeccionPV() {
+  return {
+    "ID CONCENTRADO": { columna: "A", indice: 1 },
+    "MARCA TEMPORAL": { columna: "B", indice: 2 },
+    "APELLIDOS DEL CLIENTE": { columna: "C", indice: 3 },
+    "NOMBRE(S) DEL CLIENTE": { columna: "D", indice: 4 },
+    "ETAPAS PXM": { columna: "E", indice: 5 },
+    "ESTATUS DEL LEAD": { columna: "F", indice: 6 },
+    "ETAPAS DE LA OPORTUNIDAD": { columna: "G", indice: 7 },
+    "PROXIMA ACTUALIZACION": { columna: "H", indice: 8 },
+    "SEGUIMIENTO DE OPORTUNIDAD": { columna: "I", indice: 9 },
+    "TIPO DE SERVICIO DE LA PROPUESTA": { columna: "J", indice: 10 },
+    "FUERZA DE VENTAS PXM": { columna: "K", indice: 11 },
+    "ORIGEN DEL LEAD": { columna: "L", indice: 12 },
+    "FUERZA DE VENTAS PXM EXTERNA": { columna: "M", indice: 13 },
+    "ACUERDO CON EL ASESOR EXTERNO-EMBAJADOR": { columna: "N", indice: 14 },
+    "NSS": { columna: "O", indice: 15 },
+    "CURP": { columna: "P", indice: 16 },
+    "RFC TITULAR CON HOMOCLAVE": { columna: "Q", indice: 17 },
+    "CELULAR CLIENTE": { columna: "R", indice: 18 },
+    "EMAIL CLIENTE": { columna: "S", indice: 19 },
+    "COMENTARIOS PARA LA PROPUESTA DEL PLAN DE VIDA O TRAMITE": { columna: "T", indice: 20 },
+    "RÉGIMEN": { columna: "U", indice: 21 },
+    "ESTATUS EN EL IMSS": { columna: "V", indice: 22 },
+    "REGLA DE 52 SEMANAS": { columna: "W", indice: 23 },
+    "SEMANAS COTIZADAS IMSS": { columna: "X", indice: 24 },
+    "SEMANAS DESCONTADAS": { columna: "Y", indice: 25 },
+    "SEMANAS REINTEGRADAS": { columna: "Z", indice: 26 },
+    "SEMANAS PORTADAS": { columna: "AA", indice: 27 },
+    "FECHA DE BAJA IMSS": { columna: "AB", indice: 28 },
+    "AFORE DEL CLIENTE": { columna: "AC", indice: 29 },
+    "RECUPERACIÓN AFORE CLIENTE": { columna: "AD", indice: 30 },
+    "SE PERFILO EL CLIENTE": { columna: "AE", indice: 31 },
+    "SISEC": { columna: "AF", indice: 32 },
+    "PDF AFORE PARA PV": { columna: "AG", indice: 33 },
+    "SINDO": { columna: "AH", indice: 34 },
+    "INE": { columna: "AI", indice: 35 },
+    "CORREO ELECTRÓNICO QUE SUBIÓ EL PLAN": { columna: "AJ", indice: 36 },
+    "LINK CITA CLIENTE": { columna: "AK", indice: 37 },
+    "LINK CITA EQUIPO": { columna: "AL", indice: 38 },
+    "CARPETA CLIENTE DRIVE": { columna: "AM", indice: 39 },
+    "CALCULADORA DE SERVICIO CLIENTE": { columna: "AN", indice: 40 },
+    "PENDIENTE 1": { columna: "AO", indice: 41 },
+    "PENDIENTE 2": { columna: "AP", indice: 42 }
+  };
+}
