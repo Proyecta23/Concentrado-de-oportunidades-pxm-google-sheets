@@ -1,0 +1,13 @@
+/**
+ * @description: Resta un día a una fecha en formato de cadena "dd/MM/yyyy" y devuelve el resultado en el mismo formato.
+ * @param {string} fechaStr - La fecha en formato "dd/MM/yyyy".
+ * @returns {string} La fecha formateada.
+ */
+function STAFF_AYUDA_restarUnDiaAString(fechaStr) {
+  const fechaObj = STAFF_AYUDA_parseFecha(fechaStr);
+  const fechaRestada = STAFF_AYUDA_restarUnDia(fechaObj);
+  const dia = ("0" + fechaRestada.getDate()).slice(-2);
+  const mes = ("0" + (fechaRestada.getMonth() + 1)).slice(-2);
+  const anio = fechaRestada.getFullYear();
+  return `${dia}/${mes}/${anio}`;
+}
