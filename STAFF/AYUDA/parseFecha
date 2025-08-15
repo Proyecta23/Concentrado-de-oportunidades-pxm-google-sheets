@@ -1,0 +1,9 @@
+/**
+ * @description: Convierte una cadena de fecha "dd/mm/yyyy" a un objeto Date.
+ * @param {string} fechaStr - La fecha en formato "dd/mm/yyyy".
+ * @returns {Date} Un objeto Date.
+ */
+function STAFF_AYUDA_parseFecha(fechaStr) {
+  let partes = fechaStr.split("/");
+  return new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+}
