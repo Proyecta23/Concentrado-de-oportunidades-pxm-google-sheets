@@ -1,0 +1,9 @@
+/**
+ * @description: Obtiene el último día del mes actual en formato "dd/MM/yyyy".
+ * @returns {string} La fecha formateada.
+ */
+function STAFF_AYUDA_obtenerUltimoDiaMes() {
+  let hoy = new Date();
+  let ultimoDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
+  return Utilities.formatDate(ultimoDia, Session.getScriptTimeZone(), "dd/MM/yyyy");
+}
