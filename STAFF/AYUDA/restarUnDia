@@ -1,0 +1,10 @@
+/**
+ * @description: Resta un día a un objeto Date.
+ * @param {Date} fecha - El objeto Date.
+ * @returns {Date} El nuevo objeto Date.
+ */
+function STAFF_AYUDA_restarUnDia(fecha) {
+  let nueva = new Date(fecha.getTime());
+  nueva.setDate(nueva.getDate() - 1);
+  return nueva;
+}
