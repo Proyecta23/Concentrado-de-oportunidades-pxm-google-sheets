@@ -1,0 +1,30 @@
+/**
+ * Procesa los periodos laborales en SISEC GENERAL.
+ * Nivel N1
+ */
+function N1_procesarSISECGeneral(patrones) {
+  let periodos = [];
+  patrones.forEach(patron => {
+    let fechaAlta = patron.alta;
+    let fechaBaja = patron.baja;
+    let salario = patron.salario;
+
+    // Validar que fechaBaja no sea undefined antes de usar toUpperCase()
+    if (fechaBaja && typeof fechaBaja === "string" && fechaBaja.toUpperCase() === "VIGENTE") {
+      fechaBaja = STAFF_AYUDA_obtenerUltimoDiaMes();
+    }
+
+    // Agregar el período a la lista
+    periodos.push({
+      patron: patron.nombre,
+      alta: fechaAlta,
+      baja: fechaBaja,
+      salario: salario
+    });
+  });
+  // Ordenar de más reciente a más antiguo
+  periodos.sort((a, b) => new Date(b.baja.split("/").reverse().join("-")) - new Date(a.baja.split("/").reverse().join("-")));
+  Logger.log("📌 Períodos procesados (SISEC GENERAL): " + JSON.stringify(periodos));
+
+  return periodos;
+}
