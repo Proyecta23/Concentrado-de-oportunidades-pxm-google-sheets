@@ -1,0 +1,38 @@
+/**
+ * @description: Vacía los datos de los periodos de cotización en la hoja de la calculadora.
+ * @param {string} linkCalculadora - URL de la hoja de cálculo de la calculadora.
+ * @param {Array<Object>} periodos - Array de objetos con los periodos de cotización.
+ */
+function N1_vaciarDatosEnCalculadora(linkCalculadora, periodos) {
+  Logger.log("📝 Iniciando vaciado de datos en la calculadora...");
+
+  if (!linkCalculadora || !periodos || periodos.length === 0) {
+    Logger.log("⚠️ No hay datos o link de calculadora para vaciar.");
+    return;
+  }
+
+  try {
+    const calculadora = SpreadsheetApp.openByUrl(linkCalculadora);
+    const hojaCalculo = calculadora.getSheetByName("SISEC DETALLADO");
+
+    if (!hojaCalculo) {
+      Logger.log("❌ Hoja 'SISEC DETALLADO' no encontrada en la calculadora.");
+      return;
+    }
+
+    // Limpiar datos anteriores (desde la fila 2)
+    const ultimaFila = hojaCalculo.getLastRow();
+    if (ultimaFila > 1) {
+      hojaCalculo.getRange(2, 1, ultimaFila - 1, 4).clearContent();
+    }
+
+    // Escribir nuevos datos
+    const datos = periodos.map(p => [p.patron, p.alta, p.baja, p.salario]);
+    hojaCalculo.getRange(2, 1, datos.length, datos[0].length).setValues(datos);
+
+    Logger.log("✅ Datos vaciados exitosamente en la calculadora.");
+
+  } catch (error) {
+    Logger.log("❌ Error al vaciar datos en la calculadora: " + error.message);
+  }
+}
