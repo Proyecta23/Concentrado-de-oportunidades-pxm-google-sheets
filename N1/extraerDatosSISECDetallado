@@ -1,0 +1,89 @@
+/**
+ * Extrae periodos detallados de un documento SISEC.
+ * Nivel N1
+ */
+function N1_extraerDatosSISECDetallado(documentoTexto) {
+  Logger.log("📉 Iniciando extracción de datos detallados...");
+  let lineas = documentoTexto.split("\n");
+  let periodos = [];
+  let patronActual = null;
+  let fechaBajaGeneral = null;
+  let movimientos = [];
+  let vigente = false;
+
+  let lineaAnterior1 = "";
+  let lineaAnterior2 = "";
+  for (let i = 0; i < lineas.length; i++) {
+    let linea = lineas[i].trim();
+    Logger.log("🔎 Analizando línea: " + linea);
+
+    if (linea.startsWith("Nombre del patrón")) {
+      if (patronActual !== null) {
+        let periodosPatron = N1_procesarSISECDetallado(patronActual, movimientos, fechaBajaGeneral, vigente);
+        periodos.push(...periodosPatron);
+      }
+
+      let posiblePatron = (i + 1 < lineas.length) ?
+      lineas[i + 1].trim() : null;
+      if (posiblePatron && posiblePatron !== "") {
+        patronActual = posiblePatron;
+        fechaBajaGeneral = null;
+        movimientos = [];
+        vigente = false;
+        Logger.log("📉 Nuevo patrón detectado: " + patronActual);
+      } else {
+        Logger.log("⚠️ No se detectó un patrón válido después de 'Nombre del patrón'");
+        patronActual = null;
+      }
+      continue;
+    }
+
+    if (linea.startsWith("Fecha de baja")) {
+      fechaBajaGeneral = (i + 1 < lineas.length) ?
+      lineas[i + 1].trim() : null;
+      if (fechaBajaGeneral && fechaBajaGeneral.toUpperCase() === "VIGENTE") {
+        fechaBajaGeneral = STAFF_AYUDA_obtenerUltimoDiaMes();
+        vigente = true;
+      }
+    }
+
+    const tipos = ["ALTA", "REINGRESO", "MODIFICACION DE SALARIO", "BAJA"];
+    if (
+      tipos.includes(lineaAnterior2.toUpperCase()) &&
+      lineaAnterior1.match(/^\d{2}\/\d{2}\/\d{4}$/) &&
+      linea.match(/^\$\s*[\d,.]+$/)
+    ) {
+      if (!patronActual) {
+        Logger.log("⚠️ Movimiento detectado sin patrón. Ignorado.");
+      } else {
+        let tipo = lineaAnterior2.toUpperCase();
+        let fecha = lineaAnterior1;
+        let salario = parseFloat(linea.replace("$", "").replace(/,/g, "").trim());
+
+        Logger.log(`✅ Movimiento detectado: ${tipo} - ${fecha} - ${salario}`);
+        movimientos.push({ tipo, fecha, salario });
+      }
+    }
+
+    lineaAnterior2 = lineaAnterior1;
+    lineaAnterior1 = linea;
+  }
+
+  if (patronActual) {
+    let periodosPatron = N1_procesarSISECDetallado(patronActual, movimientos, fechaBajaGeneral, vigente);
+    periodos.push(...periodosPatron);
+  }
+
+  // Validación para evitar errores con tipos inesperados
+  periodos = periodos.filter(
+    (p) => typeof p === "object" && typeof p.alta === "string" && p.alta.includes("/")
+  );
+  // Ordenar periodos por fecha más reciente
+  periodos.sort(
+    (a, b) =>
+      new Date(b.alta.split("/").reverse().join("-")) -
+      new Date(a.alta.split("/").reverse().join("-"))
+  );
+  Logger.log("📉 Periodos extraídos: " + JSON.stringify(periodos));
+  return periodos;
+}
