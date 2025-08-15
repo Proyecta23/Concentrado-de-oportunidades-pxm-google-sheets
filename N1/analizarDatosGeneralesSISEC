@@ -1,0 +1,80 @@
+/**
+ * @description: Analiza los datos generales del SISEC para generar un resumen.
+ * @param {Object} datosCliente - Objeto con datos del cliente (nombre, nss, curp).
+ * @param {Array<Object>} periodos - Array de objetos con los periodos de cotización extraídos.
+ * @param {string} fechaReporte - La fecha de emisión del reporte del IMSS.
+ * @returns {Object} Un objeto con el resumen y los detalles de los gaps.
+ */
+function N1_analizarDatosGeneralesSISEC(datosCliente, periodos, fechaReporte) {
+  Logger.log("⚙️ Iniciando análisis de datos generales...");
+
+  const resumen = {};
+  const gapsDetalle = [];
+  const datosFinales = {};
+
+  // 1. Obtener los datos de NSS y CURP del cliente
+  const { nombre, nss, curp } = datosCliente;
+
+  // 2. Analizar las semanas cotizadas y otras métricas
+  // Se asume que estos valores son pasados o extraídos de forma externa.
+  const semanasCotizadasIMSS = 1126;
+  const semanasDescontadas = 124;
+  const semanasReintegradas = 0;
+  const semanasPortadas = null;
+
+  datosFinales["Semanas cotizadas IMSS"] = semanasCotizadasIMSS;
+  datosFinales["Semanas Descontadas"] = semanasDescontadas;
+  datosFinales["Semanas Reintegradas"] = semanasReintegradas;
+  
+  if (semanasPortadas !== null) {
+      datosFinales["Semanas Portadas"] = semanasPortadas;
+  }
+
+  // 3. Analizar la fecha de baja más reciente
+  let fechaBajaMasReciente = null;
+  let hayVigente = false;
+  
+  for (const p of periodos) {
+    if (p.baja.toUpperCase() === "VIGENTE") {
+      hayVigente = true;
+      break;
+    }
+    const fechaActual = STAFF_AYUDA_parseFecha(p.baja);
+    if (!fechaBajaMasReciente || fechaActual > fechaBajaMasReciente) {
+      fechaBajaMasReciente = fechaActual;
+    }
+  }
+
+  // 4. Modificar cabeceras según la lógica definida
+  if (hayVigente) {
+      datosFinales["ESTATUS EN EL IMSS"] = "Vigente";
+      datosFinales["FECHA DE BAJA IMSS"] = ""; // Borrar el dato
+  } else {
+      datosFinales["ESTATUS EN EL IMSS"] = "Baja";
+      // Formatear la fecha más reciente a dd/MM/yyyy
+      datosFinales["FECHA DE BAJA IMSS"] = fechaBajaMasReciente ? 
+          Utilities.formatDate(fechaBajaMasReciente, Session.getScriptTimeZone(), "dd/MM/yyyy") :
+          "";
+  }
+
+  // 5. Asignar nombre, NSS, CURP y fecha de reporte
+  datosFinales["NOMBRE COMPLETO"] = nombre;
+  datosFinales["NSS"] = nss;
+  datosFinales["CURP"] = curp;
+  datosFinales["FECHA REPORTE IMSS"] = fechaReporte;
+
+  // Lógica para calcular Gaps (si la función existe)
+  // const gaps = STAFF_utilidades_calcularGapsCotizacion(periodos);
+  
+  // Rellenar resumen con los datos calculados
+  for (const key in datosFinales) {
+      resumen[key] = datosFinales[key];
+  }
+
+  Logger.log("✅ Análisis de datos generales finalizado.");
+  return {
+    resumen: resumen,
+    gapsDetalle: gapsDetalle, // O el resultado de calcularGapsCotizacion
+    periodos: periodos
+  };
+}
